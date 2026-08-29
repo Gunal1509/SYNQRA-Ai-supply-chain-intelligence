@@ -2,10 +2,14 @@ import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import Welcome from './Components/Welcome'
 import Counter from './Components/Counter'
-import Dashboard from './Components/Dashboard'
 import About from './Components/About'
+import AiAssisstant from './Pages/AiAssisstant';
+import Dashboard from './Pages/Dashboard';
+import Orders from './Pages/Orders';
+import Shipments from './Pages/Shipments';
+import Suppliers from './Pages/Suppliers';
+import Dashboardlayout from './Layouts/Dashboardlayout';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 
@@ -16,12 +20,17 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+      
+      <Route element={<Dashboardlayout/>}>
+          <Route path="/" element={<Dashboard  />} />
+        <Route path="/Shipments" element={<Shipments />} />
+        <Route path="/AiAssisstant" element={<AiAssisstant />}/>
+        <Route path="/Dashboard" element={<Dashboard/>}/>
+        <Route path="/Orders" element={<Orders />}/>
+        <Route path="/Suppliers" element={<Suppliers />}/>
+      </Route>
 
-        <Route path="/" element={<Welcome  name={'Gunal'}/>} />
-
-        <Route path="/about" element={<About />} />
-
-        <Route path="/dashboard" element={<Dashboard />} />
+        
 
       </Routes>
     </BrowserRouter>
