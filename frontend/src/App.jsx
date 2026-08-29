@@ -2,7 +2,6 @@ import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import Welcome from './Components/Welcome'
 import Counter from './Components/Counter'
 import About from './Components/About'
 import AiAssisstant from './Pages/AiAssisstant';
@@ -23,12 +22,12 @@ function App() {
       <Routes>
       
       <Route element={<Dashboardlayout/>}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard  />} />
         <Route path="/Shipments" element={<Shipments />} />
-        <Route path="/AiAssisstant" element={<AiAssisstant/>}/>
+        <Route path="/AiAssisstant" element={<AiAssisstant />}/>
         <Route path="/Dashboard" element={<Dashboard/>}/>
-        <Route path="/Orders" element={<Orders/>}/>
-        <Route path="/Suppliers" element={<Suppliers/>}/>
+        <Route path="/Orders" element={<Orders />}/>
+        <Route path="/Suppliers" element={<Suppliers />}/>
       </Route>
 
         
