@@ -1,12 +1,16 @@
+import "../styles/Dashboardlayout.css";
 const Navbar=()=>{
     return(
         <>
-        <h1>SYNQRA</h1>
-        <nav>
-            <li>
-                admin
-            </li>
-        </nav>
+        <div className="navbar">
+        <div><h1>SYNQRA</h1></div>
+        <div>
+                <select>
+                    <option>admin</option>
+                    <option>user</option>
+                </select>
+        </div>
+        </div>
         </>
     );
 }

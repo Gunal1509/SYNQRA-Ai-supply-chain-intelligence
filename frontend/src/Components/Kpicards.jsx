@@ -1,8 +1,11 @@
+import "../styles/Dashboardlayout.css";
 const Kpicards=(props)=>{
     return(
         <>
-        <h1>Titles: {props.title}</h1>
-        <h1>Data:{props.value}</h1>
+        <div className="kpidata-container">
+        <div><h4>Titles: {props.title}</h4></div>
+        <div><h4>Data:{props.value}</h4></div>
+        </div>
         </>
     )
 }

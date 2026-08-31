@@ -6,12 +6,12 @@ import OrdersTable from "../Components/OrdersTables";
 function Dashboard() {
  
   return (<><h1  style={{ color: "red" }}>Dashboard</h1>
-       
+              <div className="kpi-container">
               {kpis.map((kpi,index)=>(
                      <Kpicards key={index} title={kpi.title} value={kpi.data}/>
               ))}
-
-             <OrdersTable order={orders}/>
+          </div>
+             
   </>);
 }
 

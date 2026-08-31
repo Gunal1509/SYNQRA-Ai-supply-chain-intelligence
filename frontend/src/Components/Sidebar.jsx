@@ -1,11 +1,12 @@
 import { useNavigate,NavLink  } from "react-router-dom";
 
-function Sidebar() {
+function Sidebtn() {
   const navigate = useNavigate();
 
   return (
-    <>2
-   <NavLink
+    <>
+    <aside className="sidebar">
+   <NavLink className="sd-btn"
   to="/orders"
   style={({ isActive }) => ({
     color: isActive ? "red" : "black",
@@ -14,16 +15,16 @@ function Sidebar() {
   Orders
 </NavLink>
 
-<NavLink
+<><NavLink className="sd-btn"
   to="/AiAssisstant"
   style={({ isActive }) => ({
     color: isActive ? "red" : "black",
   })}
 >
   AiAssisstnt
-</NavLink>
+</NavLink></>
 
-<NavLink
+<NavLink className="sd-btn"
   to="/Shipments"
   style={({ isActive }) => ({
     color: isActive ? "red" : "black",
@@ -32,7 +33,7 @@ function Sidebar() {
   Shipments
 </NavLink>
 
-<NavLink
+<NavLink className="sd-btn"
   to="/Suppliers"
   style={({ isActive }) => ({
     color: isActive ? "red" : "black",
@@ -41,7 +42,7 @@ function Sidebar() {
   Suppliers
 </NavLink>
 
-<NavLink
+<NavLink className="sd-btn"
   to="/Dashboard"
   style={({ isActive }) => ({
     color: isActive ? "red" : "black",
@@ -49,9 +50,10 @@ function Sidebar() {
 >
   Dashboard
 </NavLink>
+</aside>
 
     </>
   );
 }
 
-export default Sidebar;
+export default Sidebtn;

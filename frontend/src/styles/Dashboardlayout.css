@@ -1,0 +1,132 @@
+.layout {
+  display: flex;
+  gap: 20px;
+  row-gap: 20px;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  border: 2px solid rgb(24, 24, 24);
+}
+.sidebar {
+  margin-top: 20px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: black;
+  padding-right: 10px;
+}
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px 30px;
+}
+.navbar{
+  display: flex;
+   gap: 20px;
+   justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border: 2px solid rgb(16, 21, 16);
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.tables {
+    border-collapse: collapse;
+    margin: 0 auto;
+   
+}
+.tables th,
+.tables td {
+    
+    padding: 10px;
+       border: 1px solid rgb(20, 15, 15);
+}
+.table-container {
+    border: 1px solid rgb(16, 13, 13);
+    border-radius: 10px;
+    overflow: hidden;
+    width: fit-content;
+    margin: 0 auto;
+}
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    padding: 30px;
+    width: 350px;
+
+    background: rgb(39, 34, 34);
+    border: 1px solid #120f0f;
+    border-radius: 12px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-container input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.form-container input:focus {
+    border-color: blue;
+}
+
+.form-container button {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.kpi-container{
+  display:flex;
+  border-radius: 5px;
+  padding: 10px 20px;
+  flex-direction: row;
+  column-gap: 15px;
+  
+}
+.kpidata-container{
+  display:flex;
+  border-radius: 5px;
+  padding: 10px 20px;
+  flex-direction: column;
+  border: 2px solid rgb(27, 24, 24);
+}
+.sd-btn {
+    display: block;
+    width:80% ;
+    padding: 8px;
+
+    margin-bottom: 10px;
+
+    text-align: center;
+
+    text-decoration: none;
+    color: black;
+
+    background-color: white;
+
+    border: 1px solid #999;
+    border-radius: 4px;
+
+    cursor: pointer;
+    position: relative;
+}

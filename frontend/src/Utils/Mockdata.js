@@ -9,10 +9,12 @@ export const kpis=[
     }
   ];
   export const orders=[{
+    id:1,
     order:"kitkat",
     supplier:"nestle",
     status:"delivery"
   },{
+    id:2,
     order:"munch",
     supplier:"hindustan",
     status:"pending"
