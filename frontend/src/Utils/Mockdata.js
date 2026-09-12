@@ -1,21 +1,14 @@
-export const kpis=[
-    {
-      title:'supplier',
-      data:899
+export const dashboard=[
+   {
+  totalOrders: 120,
+  activeShipments: 35,
+  suppliers: 18,
+  delayedOrders: 7
     },
     {
-      title:'shipments',
-      data:900
-    }
+  totalOrders: 190,
+  activeShipments: 25,
+  suppliers: 10,
+  delayedOrders: 9
+}
   ];
-  export const orders=[{
-    id:1,
-    order:"kitkat",
-    supplier:"nestle",
-    status:"delivery"
-  },{
-    id:2,
-    order:"munch",
-    supplier:"hindustan",
-    status:"pending"
-  }]

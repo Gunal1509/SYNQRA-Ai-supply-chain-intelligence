@@ -130,3 +130,14 @@ td {
     cursor: pointer;
     position: relative;
 }
+.update-table form{
+      background: darkslateblue;
+}
+.update-table h4{
+  margin-top: 3px;
+  color:black;
+}
+.input-search{
+
+    align-items: center;
+}
