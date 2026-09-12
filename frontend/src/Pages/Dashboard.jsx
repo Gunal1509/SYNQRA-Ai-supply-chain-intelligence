@@ -1,18 +1,30 @@
 import Kpicards from "../Components/Kpicards";
-import {kpis} from "../Utils/Mockdata";
-import { orders } from "../Utils/Mockdata";
 import OrdersTable from "../Components/OrdersTables";
+import { useEffect,useState } from "react";
+import axios from "axios";
 
 function Dashboard() {
+  const[supplies,setsupp]=useState([]);
+  useEffect(()=>{
+      const getDashboardStats = async () => {
+    const response = await axios.get("http://localhost:5000/dashboard");
+
+    setsupp(response.data);
+};
+   getDashboardStats();
+},[]);
+       
  
   return (<><h1  style={{ color: "red" }}>Dashboard</h1>
-       
-              {kpis.map((kpi,index)=>(
-                     <Kpicards key={index} title={kpi.title} value={kpi.data}/>
+              <div className="kpi-container">
+              {supplies.map((kpi,index)=>(
+                     <Kpicards key={index} totalOrders={kpi.totalOrders}
+  activeShipments={kpi.activeShipments}
+  suppliers={kpi.suppliers}
+  delayedOrders={kpi.delayedOrders}/>
               ))}
-
-             <OrdersTable order={orders}/>
-  </>);
+          </div>
+             </>);
 }
 
 export default Dashboard;

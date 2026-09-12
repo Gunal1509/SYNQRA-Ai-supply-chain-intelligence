@@ -1,5 +1,11 @@
+import OrdersTable from "../Components/OrdersTables";
 function Orders() {
-  return <h1>Orders</h1>;
+  return (
+    <>
+    
+    <OrdersTable/>
+    </>
+  )
 }
 
 export default Orders;
