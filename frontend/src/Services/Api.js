@@ -1,4 +1,4 @@
-import { orders,dashboard } from "../Utils/Mockdata.js";
+import {dashboard } from "../Utils/Mockdata.js";
 import express from "express";
 import cors from "cors"
 
