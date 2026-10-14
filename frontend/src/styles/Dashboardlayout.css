@@ -101,6 +101,9 @@ td {
   padding: 10px 20px;
   flex-direction: row;
   column-gap: 15px;
+   border: 2px solid rgb(27, 24, 24);
+   flex-wrap: wrap;
+    gap: 15px;
   
 }
 .kpidata-container{
@@ -109,6 +112,8 @@ td {
   padding: 10px 20px;
   flex-direction: column;
   border: 2px solid rgb(27, 24, 24);
+  flex: 0 0 calc((100% - 75px) / 6);
+   box-sizing: border-box;
 }
 .sd-btn {
     display: block;

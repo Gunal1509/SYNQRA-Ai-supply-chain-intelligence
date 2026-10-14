@@ -1,88 +1,112 @@
 import React,{ useState,useEffect,useRef} from "react";
 import"../styles/Dashboardlayout.css"
-import {loadorder,updates,submit,remove} from "../Services/service";
+import {loadorder,updates,submit,remove,getSuppliers } from "../Services/service";
 
 const OrdersTable=()=>{
      const [orders, setOrders] = useState([]);
-     const[orderform,setorder]=useState({
-       order:"",
-           supplier:"",
-           status:""
-     });
+     const [orderform, setorder] = useState({
+  id: "",
+  order: "",
+  supplierId: "",
+  status: ""
+});
      const update = useRef({
   id:0,
   order: "",
+  supplierId:"",
   supplier: "",
   status: ""
 });
 const [search, setSearch] = useState("");
 const [statusFilter, setStatusFilter] = useState("All");
+const [suppliers, setSuppliers] = useState([]);
  const filteredOrders = orders.filter((item) => {
-  const searchMatch =
-    item.order.toLowerCase().includes(search.toLowerCase()) ||
-    item.supplier.toLowerCase().includes(search.toLowerCase());
 
-  const statusMatch =
-    statusFilter === "All" || item.status === statusFilter;
+    const searchText = search.toLowerCase();
 
-  return searchMatch && statusMatch;
+    const searchMatch =
+        (item.order || "").toLowerCase().includes(searchText) ||
+        (item.supplier?.name || "").toLowerCase().includes(searchText);
+
+    const statusMatch =
+        statusFilter === "All" ||
+        item.status === statusFilter;
+
+    return searchMatch && statusMatch;
 });
-      useEffect(()=>{
-        const load = async () => {
-    const res = await loadorder();
-    setOrders(res);
+useEffect(() => {
+  const loadSuppliers = async () => {
+    const data = await getSuppliers();
+
+    if (data) {
+      setSuppliers(data);
+    }
   };
+
+  loadSuppliers();
+}, []);
+const load = async () => {
+    const res = await loadorder();
+  if (res) {
+        setOrders(res);
+    }
+  };
+      useEffect(()=>{
   load();
       },[]);
-     const handlesubmit=async (event)=>{
-             event.preventDefault();
-             const res=await submit(orderform);
-              if (res) {
-    setOrders((prevOrders) => [...prevOrders, res]);
-  }
-      }
+    const handlesubmit = async (event) => {
+    event.preventDefault();
+
+    const newOrder = {
+        ...orderform,
+        status: "INCOMPLETE"
+    };
+
+    const res = await submit(newOrder);
+
+    if (res) {
+        setOrders((prevOrders) => [...prevOrders, res]);
+    }
+};
       const [isup,setup]=useState(false);
      
   
-             const handleDelete=async(i)=>{
-              update.current = {
-    id:i.id,            
-    order: i.order,
-    supplier: i.supplier,
-    status: i.status
-  };
-  try{
-      const del=await remove(update.current);
-      setOrders(del);
-      console.log("deleted")
-  }
-  catch{
-    console.log("errorin delete");
-  }
+             const handleDelete = async (i) => {
 
-   }
+    const result = await remove(i.id);
+
+    if (result) {
+        await load();
+    }
+};
 
           
-          const handleupdate=async(event)=>{
-            event.preventDefault();
+          const handleupdate = async (event) => {
+    event.preventDefault();
 
-               const upd=await updates(update.current);
-               if(upd==null)
-               {
-                    console.log("no udpdate");
-               }
-               else{
-                setup(true);
-                console.log("updated");
-                setOrders(upd);
-                
-               }
-             }   
+    try {
+        const upd = await updates(update.current);
+
+        if (upd == null) {
+            console.log("No update");
+            return;
+        }
+
+        setup(true);
+        console.log("Updated successfully");
+
+        await load();
+
+    } catch (error) {
+        console.error("Error updating order:", error);
+    }
+};
        const [editId, setEditId] = useState(null);
        const  handleedit=(i)=>{
         update.current = {
      id:i.id,     
     order: i.order,
+    supplierId:i.supplier?.name,
     supplier: i.supplier,
     status: i.status
   };
@@ -113,7 +137,8 @@ const [statusFilter, setStatusFilter] = useState("All");
     <tr>
       <th>Id</th>
       <th>Order</th>
-      <th>Supplier</th>
+      <th>Supplier_id</th>
+      <th>Supplier_name</th>
       <th>Status</th>
       <th>Action</th>
     </tr>
@@ -129,11 +154,20 @@ const [statusFilter, setStatusFilter] = useState("All");
       <tr>
         <td>{i.id}</td>
         <td>{i.order}</td>
-        <td>{i.supplier}</td>
-        <td>
-          {i.status === "delivery" ? "Delivered" : "Pending"}
-        </td>
+         <td>{i.supplier?.id || "No Supplier"}</td>
 
+      <td>{i.supplier?.name || "No Supplier"}</td>
+        <td>
+  {i.status === "delivered" || i.status === "DELIVERED"
+    ? "Delivered"
+    : i.status === "in_transit" || i.status === "IN_TRANSIT"
+    ? "In Transit"
+    : i.status === "delayed" || i.status === "DELAYED"
+    ? "Delayed"
+    : i.status === "cancelled" || i.status === "CANCELLED"
+    ? "Cancelled"
+    : "Pending"}
+</td>
         <td>
           <button onClick={() => handleedit(i)}>
             Edit
@@ -171,27 +205,27 @@ const [statusFilter, setStatusFilter] = useState("All");
           }}
               />
 
-              <input
-                name="supplier"
-                defaultValue={i.supplier}
-                  onChange={(event) => {
-            update.current = {
-              ...update.current,
-              [event.target.name]: event.target.value
-            };
-          }}
-              />
+              <select
+  name="supplierId"
+  value={orderform.supplierId}
+  onChange={(event) =>
+    setorder({
+      ...orderform,
+      supplierId: event.target.value
+    })
+  }
+>
+  <option value="">Select Supplier</option>
 
-              <input
-                name="status"
-                defaultValue={i.status}
-                onChange={(event) => {
-            update.current = {
-              ...update.current,
-              [event.target.name]: event.target.value
-            };
-          }}
-              />
+  {suppliers.map((supplier) => (
+    <option
+      key={supplier.id}
+      value={supplier.id}
+    >
+      {supplier.name}
+    </option>
+  ))}
+</select>
 
               <button type="submit">
                 Update
@@ -217,8 +251,27 @@ const [statusFilter, setStatusFilter] = useState("All");
     <form onSubmit={handlesubmit}> 
       <input name="id" type='number'placeholder="order_id" onChange={(event)=>{setorder({...orderform,[event.target.name]:event.target.value})}}></input>
       <input name="order" type='text'placeholder="ordername" onChange={(event)=>{setorder({...orderform,[event.target.name]:event.target.value})}}></input>
-       <input name="supplier" type='text'placeholder="suppliername" onChange={(event)=>{setorder({...orderform,[event.target.name]:event.target.value})}}></input>
-        <input name="status" type='text'placeholder="status" onChange={(event)=>{setorder({...orderform,[event.target.name]:event.target.value})}}></input>
+      <select
+  name="supplierId"
+  value={orderform.supplierId}
+  onChange={(event) =>
+    setorder({
+      ...orderform,
+      supplierId: event.target.value
+    })
+  }
+>
+  <option value="">Select Supplier</option>
+
+  {suppliers.filter((supplier) => supplier.status === "Active").map((supplier) => (
+    <option
+      key={supplier.id}
+      value={supplier.id}
+    >
+      {supplier.name}
+    </option>
+  ))}
+</select>
         <button type="submit">Add Order</button>
     </form>
 
