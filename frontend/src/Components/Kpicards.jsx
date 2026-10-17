@@ -6,7 +6,9 @@ const Kpicards=(props)=>{
         <div><h4>TotalOrders: {props.totalOrders}</h4></div>
         <div><h4>ActiveShipments: {props.activeShipments}</h4></div>
         <div><h4>Suppliers: {props.suppliers}</h4></div>
-        <div><h4>DelayedOrders: {props.delayedOrders}</h4></div>
+        <div><h4>Pending Orders: {props.pendingOrders}</h4></div>
+        <div><h4>Incomplete Orders: {props.incompleteOrders}</h4></div>
+        <div><h4>Delivered Orders: {props.deliveredOrders}</h4></div>
         </div>
         </>
     )

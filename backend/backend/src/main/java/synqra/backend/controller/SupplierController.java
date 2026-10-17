@@ -1,6 +1,8 @@
 package synqra.backend.controller;
 
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 import synqra.backend.entity.Supplier;
 import synqra.backend.service.SupplierService;
 
@@ -25,7 +27,7 @@ public class SupplierController {
         return supplierService.getSupplierById(id);
     }
     @PostMapping
-    public Supplier createSupplier(@RequestBody Supplier supplier) {
+    public Supplier createSupplier(@Valid  @RequestBody Supplier supplier) {
         return supplierService.createSupplier(supplier);
     }
     @PutMapping("/{id}")

@@ -8,7 +8,9 @@ function Dashboard() {
         totalOrders: 0,
         activeShipments: 0,
         suppliers: 0,
-        delayedOrders: 0
+        pendingOrders: 0,
+        incompleteOrders: 0,
+        deliveredOrders: 0
     });
 
     useEffect(() => {
@@ -17,9 +19,18 @@ function Dashboard() {
 
             try {
 
+                const token = localStorage.getItem("token");
+
                 const response = await axios.get(
-                    "http://localhost:8080/dashboard"
+                    "http://localhost:8080/dashboard",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
                 );
+
+                console.log("Dashboard data:", response.data);
 
                 setStats(response.data);
 
@@ -42,6 +53,7 @@ function Dashboard() {
     return (
 
         <>
+
             <h1 style={{ color: "red" }}>
                 Dashboard
             </h1>
@@ -52,7 +64,9 @@ function Dashboard() {
                     totalOrders={stats.totalOrders}
                     activeShipments={stats.activeShipments}
                     suppliers={stats.suppliers}
-                    delayedOrders={stats.delayedOrders}
+                    pendingOrders={stats.pendingOrders}
+                    incompleteOrders={stats.incompleteOrders}
+                    deliveredOrders={stats.deliveredOrders}
                 />
 
             </div>

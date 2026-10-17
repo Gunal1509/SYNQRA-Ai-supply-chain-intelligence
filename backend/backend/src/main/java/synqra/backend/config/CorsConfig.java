@@ -25,8 +25,11 @@ public class CorsConfig {
                                 "DELETE",
                                 "OPTIONS"
                         )
-                        .allowedHeaders("*");
-
+                        .allowedHeaders(
+                                "Authorization",
+                                "Content-Type"
+                        )
+                        .allowCredentials(true);
             }
         };
     }

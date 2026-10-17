@@ -1,59 +1,75 @@
-import { useNavigate,NavLink  } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-function Sidebtn() {
-  const navigate = useNavigate();
+function Sidebar() {
 
-  return (
-    <>
-    <aside className="sidebar">
-   <NavLink className="sd-btn"
-  to="/orders"
-  style={({ isActive }) => ({
-    color: isActive ? "red" : "black",
-  })}
->
-  Orders
-</NavLink>
+    const role = localStorage.getItem("role");
 
-<><NavLink className="sd-btn"
-  to="/AiAssisstant"
-  style={({ isActive }) => ({
-    color: isActive ? "red" : "black",
-  })}
->
-  AiAssisstnt
-</NavLink></>
+    return (
+        <aside className="sidebar">
 
-<NavLink className="sd-btn"
-  to="/Shipments"
-  style={({ isActive }) => ({
-    color: isActive ? "red" : "black",
-  })}
->
-  Shipments
-</NavLink>
+            <h2>SYNQRA</h2>
 
-<NavLink className="sd-btn"
-  to="/Suppliers"
-  style={({ isActive }) => ({
-    color: isActive ? "red" : "black",
-  })}
->
-  Suppliers
-</NavLink>
+            {/* USER */}
+            {role !== "ADMIN" && (
+                <>
+                    <NavLink
+                        className="sd-btn"
+                        to="/Dashboard"
+                        style={({ isActive }) => ({
+                            color: isActive ? "red" : "black",
+                        })}
+                    >
+                        Dashboard
+                    </NavLink>
 
-<NavLink className="sd-btn"
-  to="/Dashboard"
-  style={({ isActive }) => ({
-    color: isActive ? "red" : "black",
-  })}
->
-  Dashboard
-</NavLink>
-</aside>
+                    <NavLink
+                        className="sd-btn"
+                        to="/Orders"
+                        style={({ isActive }) => ({
+                            color: isActive ? "red" : "black",
+                        })}
+                    >
+                        Orders
+                    </NavLink>
 
-    </>
-  );
+                    <NavLink
+                        className="sd-btn"
+                        to="/Shipments"
+                        style={({ isActive }) => ({
+                            color: isActive ? "red" : "black",
+                        })}
+                    >
+                        Shipments
+                    </NavLink>
+                </>
+            )}
+
+            {/* SUPPLIERS - ADMIN + USER */}
+            <NavLink
+                className="sd-btn"
+                to="/Suppliers"
+                style={({ isActive }) => ({
+                    color: isActive ? "red" : "black",
+                })}
+            >
+                Suppliers
+            </NavLink>
+
+            {/* ADMIN ONLY */}
+            {role === "ADMIN" && (
+                <NavLink
+                    className="sd-btn"
+                    to="/Users"
+                    style={({ isActive }) => ({
+                        color: isActive ? "red" : "black",
+                    })}
+                >
+                    Users
+                </NavLink>
+            )}
+
+        </aside>
+    );
 }
 
-export default Sidebtn;
+export default Sidebar;
