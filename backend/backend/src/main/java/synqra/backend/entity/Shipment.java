@@ -1,6 +1,9 @@
 package synqra.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 @Entity
@@ -11,14 +14,19 @@ public class Shipment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Tracking number is required")
     private String trackingNumber;
 
+    @NotBlank(message = "Carrier is required")
     private String carrier;
 
+    @NotBlank(message = "Status is required")
     private String status;
 
+    @NotNull(message = "Expected delivery is required")
     private LocalDate expectedDelivery;
 
+    @NotNull(message = "Order is required")
     @OneToOne
     @JoinColumn(name = "order_id", unique = true)
     private Order order;

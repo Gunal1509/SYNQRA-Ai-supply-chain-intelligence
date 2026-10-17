@@ -1,0 +1,85 @@
+package synqra.backend.service;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import synqra.backend.entity.User;
+import synqra.backend.repository.UserRepository;
+import synqra.backend.security.JwtService;
+
+import java.time.LocalDateTime;
+
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    private final JwtService jwtService;
+
+    private final BCryptPasswordEncoder passwordEncoder =
+            new BCryptPasswordEncoder();
+
+    public UserService(
+            UserRepository userRepository,
+            JwtService jwtService) {
+
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+    }
+
+    public User signup(User user) {
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+
+            throw new RuntimeException(
+                    "Email already registered"
+            );
+        }
+
+        // Hash password
+        user.setPassword(
+                passwordEncoder.encode(user.getPassword())
+        );
+
+        // Normal signup users are USER
+        user.setRole("USER");
+
+        // New account is active
+        user.setActive(true);
+
+        return userRepository.save(user);
+    }
+
+    public String login(String email, String password) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        // Check whether account is active
+        if (!user.isActive()) {
+
+            throw new RuntimeException(
+                    "User account is deactivated"
+            );
+        }
+
+        // Check password
+        if (!passwordEncoder.matches(
+                password,
+                user.getPassword()
+        )) {
+
+            throw new RuntimeException(
+                    "Invalid password"
+            );
+        }
+        user.setLastLogin(LocalDateTime.now());
+
+        userRepository.save(user);
+        return jwtService.generateToken(
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+}

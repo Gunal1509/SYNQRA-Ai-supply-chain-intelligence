@@ -37,13 +37,17 @@ public class DashboardService {
         long suppliers =
                 supplierRepository.count();
 
-        long delayedOrders =
+        long pendingoOrders =
                 shipmentRepository.countByStatus("PENDING");
+        long InCompleteOrders=orderRepository.countByStatus("INCOMPLETE");
+        long DeliveredOrders=shipmentRepository.countByStatus("DELIVERED");
 
         stats.put("totalOrders", totalOrders);
         stats.put("activeShipments", activeShipments);
         stats.put("suppliers", suppliers);
-        stats.put("delayedOrders", delayedOrders);
+        stats.put("pendingOrders", pendingoOrders);
+        stats.put("incompleteOrders",InCompleteOrders);
+        stats.put("deliveredOrders",DeliveredOrders);
 
         return stats;
     }
