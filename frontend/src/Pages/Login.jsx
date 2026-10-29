@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -11,6 +11,23 @@ function Login() {
         email: "",
         password: ""
     });
+
+    const [message, setMessage] = useState("");
+
+    // Show logout/session-expired message
+    useEffect(() => {
+
+        const logoutMessage =
+            localStorage.getItem("logoutMessage");
+
+        if (logoutMessage) {
+
+            setMessage(logoutMessage);
+
+            localStorage.removeItem("logoutMessage");
+        }
+
+    }, []);
 
     const handleChange = (event) => {
 
@@ -34,18 +51,36 @@ function Login() {
 
             const token = response.data.token;
 
-            // Save JWT
-            localStorage.setItem("token", token);
-
-            // Read JWT
+            // Decode JWT
             const decoded = jwtDecode(token);
 
             console.log("JWT:", decoded);
+            console.log("Email:", decoded.sub);
             console.log("Role:", decoded.role);
 
-            // Save role
-            localStorage.setItem("role", decoded.role);
+            // Check whether token is already expired
+            if (decoded.exp * 1000 < Date.now()) {
 
+                setMessage(
+                    "Login session has expired. Please try again."
+                );
+
+                return;
+            }
+
+            // Save JWT
+            localStorage.setItem(
+                "token",
+                token
+            );
+
+            // Save role
+            localStorage.setItem(
+                "role",
+                decoded.role
+            );
+
+            // Go to dashboard
             navigate("/Dashboard");
 
         } catch (error) {
@@ -55,6 +90,19 @@ function Login() {
                 error
             );
 
+            if (error.response) {
+
+                setMessage(
+                    error.response.data?.message ||
+                    "Invalid email or password."
+                );
+
+            } else {
+
+                setMessage(
+                    "Unable to connect to server."
+                );
+            }
         }
     };
 
@@ -62,6 +110,12 @@ function Login() {
         <div>
 
             <h1>Login</h1>
+
+            {message && (
+                <p style={{ color: "red" }}>
+                    {message}
+                </p>
+            )}
 
             <form onSubmit={handleSubmit}>
 
@@ -71,6 +125,7 @@ function Login() {
                     placeholder="Email"
                     value={form.email}
                     onChange={handleChange}
+                    required
                 />
 
                 <input
@@ -79,6 +134,7 @@ function Login() {
                     placeholder="Password"
                     value={form.password}
                     onChange={handleChange}
+                    required
                 />
 
                 <button type="submit">

@@ -4,7 +4,7 @@ function ProtectedRoute() {
 
     const token = localStorage.getItem("token");
 
-    console.log("TOKEN:", token);
+    console.log("ProtectedRoute token:", token);
 
     if (!token) {
         return <Navigate to="/Login" replace />;

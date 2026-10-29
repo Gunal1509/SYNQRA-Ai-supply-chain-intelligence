@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import synqra.backend.entity.User;
 import synqra.backend.repository.UserRepository;
 import synqra.backend.security.JwtService;
+import java.util.Map;
 
 import java.time.LocalDateTime;
 
@@ -50,36 +51,27 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String login(String email, String password) {
+    public Map<String, String> login(String email, String password) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+            .orElseThrow(() ->
+                    new RuntimeException("User not found"));
 
-        // Check whether account is active
-        if (!user.isActive()) {
+    if (!passwordEncoder.matches(
+            password,
+            user.getPassword())) {
 
-            throw new RuntimeException(
-                    "User account is deactivated"
-            );
-        }
-
-        // Check password
-        if (!passwordEncoder.matches(
-                password,
-                user.getPassword()
-        )) {
-
-            throw new RuntimeException(
-                    "Invalid password"
-            );
-        }
-        user.setLastLogin(LocalDateTime.now());
-
-        userRepository.save(user);
-        return jwtService.generateToken(
-                user.getEmail(),
-                user.getRole()
-        );
+        throw new RuntimeException("Invalid password");
     }
+
+    String token = jwtService.generateToken(
+            user.getEmail(),
+            user.getRole()
+    );
+
+    return Map.of(
+            "token", token,
+            "role", user.getRole()
+    );
+}
 }

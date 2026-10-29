@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from "./AxiosInstance";
 
 const API = axios.create({
     baseURL: "http://localhost:8080"
@@ -270,6 +271,22 @@ export const deleteUser = async (id) => {
             }
         }
     );
+
+    return response.data;
+};
+
+
+export const getSuppliersPaged = async (params) => {
+    const response = await axiosInstance.get("/api/suppliers/page", {
+        params
+    });
+
+    return response.data;
+};
+export const getOrdersPaged = async (params) => {
+    const response = await axiosInstance.get("/api/gunal/page", {
+        params
+    });
 
     return response.data;
 };
