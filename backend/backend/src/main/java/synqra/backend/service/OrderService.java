@@ -6,8 +6,17 @@ import synqra.backend.repository.OrderRepository;
 import synqra.backend.repository.ShipmentRepository;
 import synqra.backend.repository.SupplierRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Set;
 
 import java.util.List;
 
@@ -33,7 +42,89 @@ public class OrderService {
 
         return orderRepository.findAll();
     }
+     
+    public Page<Order> getOrdersPaged(
+        int page,
+        int size,
+        String search,
+        String status,
+        String sortBy,
+        String direction) {
 
+    page = Math.max(page, 0);
+
+    if (!List.of(5, 10, 20).contains(size)) {
+        size = 10;
+    }
+
+    Set<String> allowedSortFields =
+            Set.of("id", "order", "status");
+
+    if (sortBy == null ||
+            !allowedSortFields.contains(sortBy)) {
+        sortBy = "id";
+    }
+
+    Sort.Direction sortDirection =
+            "desc".equalsIgnoreCase(direction)
+                    ? Sort.Direction.DESC
+                    : Sort.Direction.ASC;
+
+    Pageable pageable = PageRequest.of(
+            page,
+            size,
+            Sort.by(sortDirection, sortBy)
+    );
+
+    Specification<Order> specification =
+            (root, query, cb) -> {
+
+        var predicate = cb.conjunction();
+
+      
+        if (search != null && !search.trim().isEmpty()) {
+            String keyword =
+                    "%" + search.trim().toLowerCase() + "%";
+
+            var searchPredicate = cb.like(
+                    cb.lower(root.get("order").as(String.class)),
+                    keyword
+            );
+
+         
+            try {
+                Long orderId = Long.parseLong(search.trim());
+
+                searchPredicate = cb.or(
+                        searchPredicate,
+                        cb.equal(root.get("id"), orderId)
+                );
+            } catch (NumberFormatException ignored) {
+               
+            }
+
+            predicate = cb.and(predicate, searchPredicate);
+        }
+
+        
+        if (status != null
+                && !status.isBlank()
+                && !"ALL".equalsIgnoreCase(status)) {
+
+            predicate = cb.and(
+                    predicate,
+                    cb.equal(
+                            cb.lower(root.get("status")),
+                            status.trim().toLowerCase()
+                    )
+            );
+        }
+
+        return predicate;
+    };
+
+    return orderRepository.findAll(specification, pageable);
+}
 
     public void addOrders(Order order, Long supplierId) {
 

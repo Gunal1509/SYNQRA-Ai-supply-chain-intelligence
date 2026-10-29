@@ -28,15 +28,12 @@ public class AuthController {
     public ResponseEntity<?> login(
             @RequestBody User user) {
 
-        String token = userService.login(
-                user.getEmail(),
-                user.getPassword()
-        );
+        Map<String, String> result =
+                userService.login(
+                        user.getEmail(),
+                        user.getPassword()
+                );
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "token", token
-                )
-        );
+        return ResponseEntity.ok(result);
     }
 }
