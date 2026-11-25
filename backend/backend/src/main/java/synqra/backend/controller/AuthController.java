@@ -1,3 +1,4 @@
+
 package synqra.backend.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     public User signup(@RequestBody User user) {
-
         return userService.signup(user);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
-            @RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
 
-        Map<String, String> result =
+        Map<String, Object> result =
                 userService.login(
                         user.getEmail(),
                         user.getPassword()

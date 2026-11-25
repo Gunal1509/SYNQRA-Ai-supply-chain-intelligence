@@ -7,7 +7,7 @@ import synqra.backend.dto.PageResponse;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.core.Authentication;
 import java.util.List;
 
 @RestController
@@ -26,6 +26,7 @@ public class OrderController {
         return orderService.getOrders();
     }
 
+    // Paginated orders
     @GetMapping("/page")
     public PageResponse<Order> getOrdersPaged(
             @RequestParam(defaultValue = "0") int page,
@@ -36,30 +37,30 @@ public class OrderController {
             @RequestParam(defaultValue = "asc") String direction) {
 
         Page<Order> result = orderService.getOrdersPaged(
-                page,
-                size,
-                search,
-                status,
-                sortBy,
-                direction
+                page, size, search, status, sortBy, direction
         );
 
         return PageResponse.from(result);
     }
-    @PostMapping
-    public Order createOrders(
-            @RequestBody Order order,
-            @RequestParam Long supplierId) {
 
-        orderService.addOrders(order, supplierId);
-        return order;
-    }
+    // Create order for logged-in user
+   @PostMapping
+public Order createOrders(
+        @RequestBody Order order,
+        @RequestParam Long supplierId,
+        Authentication authentication) {
+
+    return orderService.addOrders(
+            order,
+            supplierId,
+            authentication.getName()
+    );
+}
 
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id) {
         orderService.deleteOrders(id);
     }
-
 
     @PutMapping("/{id}")
     public Order updateOrder(

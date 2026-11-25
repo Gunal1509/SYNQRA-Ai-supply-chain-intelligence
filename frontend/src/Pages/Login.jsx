@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,32 +15,24 @@ function Login() {
 
     const [message, setMessage] = useState("");
 
-    // Show logout/session-expired message
     useEffect(() => {
-
         const logoutMessage =
             localStorage.getItem("logoutMessage");
 
         if (logoutMessage) {
-
             setMessage(logoutMessage);
-
             localStorage.removeItem("logoutMessage");
         }
-
     }, []);
 
     const handleChange = (event) => {
-
         setForm({
             ...form,
             [event.target.name]: event.target.value
         });
-
     };
 
     const handleSubmit = async (event) => {
-
         event.preventDefault();
 
         try {
@@ -49,7 +42,16 @@ function Login() {
                 form
             );
 
+            console.log("LOGIN RESPONSE:", response.data);
+
             const token = response.data.token;
+            const userId = response.data.userId;
+            const role = response.data.role;
+
+            if (!userId) {
+                setMessage("User ID missing from login response.");
+                return;
+            }
 
             // Decode JWT
             const decoded = jwtDecode(token);
@@ -58,50 +60,39 @@ function Login() {
             console.log("Email:", decoded.sub);
             console.log("Role:", decoded.role);
 
-            // Check whether token is already expired
+            // Check token expiration
             if (decoded.exp * 1000 < Date.now()) {
-
                 setMessage(
                     "Login session has expired. Please try again."
                 );
-
                 return;
             }
+            console.log("LOGIN RESPONSE:", response.data);
 
-            // Save JWT
-            localStorage.setItem(
-                "token",
-                token
+            // Store login details
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", role);
+            localStorage.setItem("userId", userId);
+
+            console.log(
+                "SAVED USER ID:",
+                localStorage.getItem("userId")
             );
 
-            // Save role
-            localStorage.setItem(
-                "role",
-                decoded.role
-            );
-
-            // Go to dashboard
+            // Navigate to dashboard
             navigate("/Dashboard");
 
         } catch (error) {
 
-            console.error(
-                "Login failed:",
-                error
-            );
+            console.error("Login failed:", error);
 
             if (error.response) {
-
                 setMessage(
                     error.response.data?.message ||
                     "Invalid email or password."
                 );
-
             } else {
-
-                setMessage(
-                    "Unable to connect to server."
-                );
+                setMessage("Unable to connect to server.");
             }
         }
     };
