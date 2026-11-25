@@ -1,3 +1,4 @@
+
 package synqra.backend.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -6,15 +7,13 @@ import org.springframework.stereotype.Service;
 import synqra.backend.entity.User;
 import synqra.backend.repository.UserRepository;
 import synqra.backend.security.JwtService;
-import java.util.Map;
 
-import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final JwtService jwtService;
 
     private final BCryptPasswordEncoder passwordEncoder =
@@ -31,47 +30,48 @@ public class UserService {
     public User signup(User user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
-
-            throw new RuntimeException(
-                    "Email already registered"
-            );
+            throw new RuntimeException("Email already registered");
         }
 
-        // Hash password
         user.setPassword(
                 passwordEncoder.encode(user.getPassword())
         );
 
-        // Normal signup users are USER
         user.setRole("USER");
-
-        // New account is active
         user.setActive(true);
 
         return userRepository.save(user);
     }
 
-    public Map<String, String> login(String email, String password) {
+    // LOGIN
+    public Map<String, Object> login(
+            String email,
+            String password) {
 
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
 
-    if (!passwordEncoder.matches(
-            password,
-            user.getPassword())) {
+        if (!passwordEncoder.matches(
+                password,
+                user.getPassword())) {
 
-        throw new RuntimeException("Invalid password");
+            throw new RuntimeException("Invalid password");
+        }
+
+        if (!user.isActive()) {
+            throw new RuntimeException("Account is inactive");
+        }
+
+        String token = jwtService.generateToken(
+                user.getEmail(),
+                user.getRole()
+        );
+
+        return Map.of(
+                "token", token,
+                "role", user.getRole(),
+                "userId", user.getId()
+        );
     }
-
-    String token = jwtService.generateToken(
-            user.getEmail(),
-            user.getRole()
-    );
-
-    return Map.of(
-            "token", token,
-            "role", user.getRole()
-    );
-}
 }

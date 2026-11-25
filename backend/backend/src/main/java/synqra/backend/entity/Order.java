@@ -1,3 +1,4 @@
+
 package synqra.backend.entity;
 
 import jakarta.persistence.*;
@@ -17,6 +18,11 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
+
+    // User who owns this order
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Long getId() {
         return id;
@@ -48,5 +54,13 @@ public class Order {
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

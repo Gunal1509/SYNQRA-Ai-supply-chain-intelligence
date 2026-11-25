@@ -7,6 +7,7 @@ import Signup from './Pages/Signup';
 import Login from './Pages/Login';
 import AiAssisstant from './Pages/AiAssisstant';
 import UserManagement from "./Pages/UserManagement";
+import Notifications from "./Pages/Notifications";
 
 import ProtectedRoute from './Components/ProtectedRoute';
 
@@ -66,7 +67,9 @@ function App() {
                         <Route
     path="/Users"
     element={<UserManagement />}
+    
 />
+<Route path="/notifications" element={<Notifications />} />
 
                     </Route>
 

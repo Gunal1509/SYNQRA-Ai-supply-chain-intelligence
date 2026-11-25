@@ -146,3 +146,31 @@ td {
 
     align-items: center;
 }
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.notification-count {
+    position: absolute;
+    top: -7px;
+    right: -9px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    min-width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
